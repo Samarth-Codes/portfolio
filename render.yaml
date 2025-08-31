@@ -2,7 +2,7 @@ services:
   - type: web
     name: portfolio
     env: static
-    buildCommand: npm install && npm run build:basic
+    buildCommand: npm install && npm run build:render
     staticPublishPath: ./build
     headers:
       - source: "/(.*)"
