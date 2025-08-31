@@ -1,0 +1,340 @@
+/* Enhanced Neon Effects and Hover States */
+
+/* Base neon glow utilities */
+.neon-glow {
+  box-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px currentColor;
+}
+
+.neon-glow-sm {
+  box-shadow: 
+    0 0 2px currentColor,
+    0 0 5px currentColor,
+    0 0 8px currentColor;
+}
+
+.neon-glow-lg {
+  box-shadow: 
+    0 0 10px currentColor,
+    0 0 20px currentColor,
+    0 0 30px currentColor,
+    0 0 40px currentColor;
+}
+
+/* Neon text effects */
+.neon-text {
+  text-shadow:
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor;
+}
+
+.neon-text-sm {
+  text-shadow:
+    0 0 2px currentColor,
+    0 0 5px currentColor,
+    0 0 8px currentColor;
+}
+
+/* Interactive hover effects */
+.hover-neon-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-neon-glow:hover {
+  box-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px currentColor;
+  transform: translateY(-2px);
+}
+
+.hover-scale-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-scale-glow:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 
+    0 0 8px currentColor,
+    0 0 16px currentColor,
+    0 0 24px currentColor;
+}
+
+/* Button hover effects */
+.btn-neon {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid currentColor;
+}
+
+.btn-neon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-neon:hover::before {
+  left: 100%;
+}
+
+.btn-neon:hover {
+  box-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor;
+  transform: translateY(-2px);
+}
+
+/* Card hover effects */
+.card-hover-glow {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.card-hover-glow:hover {
+  border-color: #00ffff;
+  box-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.3),
+    0 0 20px rgba(0, 255, 255, 0.2),
+    inset 0 0 10px rgba(0, 255, 255, 0.1);
+  transform: translateY(-5px);
+}
+
+/* Link hover effects */
+.link-neon {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.link-neon::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 0 5px currentColor;
+  transition: width 0.3s ease;
+}
+
+.link-neon:hover::after {
+  width: 100%;
+}
+
+.link-neon:hover {
+  text-shadow: 0 0 5px currentColor;
+}
+
+/* Skill card specific effects */
+.skill-card-glow {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.skill-card-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.skill-card-glow:hover::before {
+  opacity: 1;
+}
+
+.skill-card-glow:hover {
+  box-shadow: 
+    0 0 15px rgba(0, 255, 255, 0.4),
+    0 0 30px rgba(0, 255, 255, 0.2),
+    inset 0 0 15px rgba(0, 255, 255, 0.1);
+  transform: translateY(-8px) scale(1.02);
+}
+
+/* Mobile-optimized hover effects */
+@media (max-width: 768px) {
+  .skill-card-glow:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 
+      0 0 10px rgba(0, 255, 255, 0.3),
+      0 0 20px rgba(0, 255, 255, 0.15);
+  }
+  
+  .project-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 
+      0 5px 20px rgba(0, 255, 255, 0.2),
+      0 0 15px rgba(0, 255, 255, 0.15);
+  }
+  
+  .hover-scale-glow:hover {
+    transform: scale(1.02) translateY(-1px);
+  }
+  
+  .card-hover-glow:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Progress bar glow effect */
+.progress-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progress-shine 2s ease-in-out;
+}
+
+@keyframes progress-shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Category button effects */
+.category-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.category-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.7s ease;
+}
+
+.category-btn:hover::before {
+  left: 100%;
+}
+
+.category-btn:hover {
+  box-shadow: 
+    0 0 10px currentColor,
+    0 0 20px rgba(0, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Social link hover effects */
+.social-link {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.social-link:hover {
+  box-shadow: 
+    0 0 10px currentColor,
+    0 0 20px currentColor;
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Navigation link effects */
+.nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 0 5px currentColor;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::before {
+  width: 100%;
+}
+
+.nav-link:hover {
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* Form input focus effects */
+.input-neon:focus {
+  box-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    inset 0 0 5px rgba(0, 255, 255, 0.1);
+}
+
+/* Project card hover effects */
+.project-card {
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.project-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 
+    0 10px 30px rgba(0, 255, 255, 0.3),
+    0 0 20px rgba(0, 255, 255, 0.2),
+    inset 0 0 20px rgba(0, 255, 255, 0.05);
+}
+
+/* Pulse animation for interactive elements */
+.pulse-on-hover:hover {
+  animation: glow-pulse 1s ease-in-out infinite alternate;
+}
+
+/* Subtle feedback for all clickable elements */
+.clickable {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-1px);
+}
+
+.clickable:active {
+  transform: translateY(0);
+}

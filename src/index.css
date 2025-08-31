@@ -1,13 +1,246 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import './styles/neon-effects.css';
+@import './styles/typography.css';
+@import './styles/responsive.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+  --primary-color: #06b6d4;
+  --background-color: #0a0a0a;
+  --card-background: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --border-color: #06b6d4;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: var(--background-color);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Mobile-specific optimizations */
+  @media (max-width: 768px) {
+    body {
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Improve touch scrolling */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevent text size adjustment */
+    html {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+  }
+}
+
+@layer components {
+  .glow-effect {
+    box-shadow: 0 0 15px var(--primary-color), 0 0 25px var(--primary-color), 0 0 40px var(--primary-color);
+  }
+
+  .card-glow {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2), 0 0 10px rgba(0, 255, 255, 0.2), inset 0 0 8px rgba(0, 255, 255, 0.1);
+  }
+
+  .noise-bg {
+    background-image: url('https://www.transparenttextures.com/patterns/noise.png');
+    background-color: var(--background-color);
+  }
+
+  .text-shadow-glitch {
+    text-shadow:
+      0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+
+  .text-shadow-glitch-primary {
+    text-shadow:
+      0.05em 0 0 rgba(0, 255, 255, 0.75),
+      -0.025em -0.05em 0 rgba(255, 0, 255, 0.75),
+      0.025em 0.05em 0 rgba(255, 255, 0, 0.75);
+  }
+
+  .neon-glow {
+    box-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 15px currentColor,
+      0 0 20px currentColor;
+  }
+
+  .clean-text {
+    /* Clean text without glow effects */
+  }
+
+  .pulse-neon {
+    animation: pulse-neon 2s ease-in-out infinite alternate;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(0, 255, 255, 0.2) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 255, 255, 0.2) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+
+  .animate-glitch {
+    animation: glitch 0.3s ease-in-out infinite alternate;
+  }
+
+  .animate-flicker {
+    animation: flicker 0.15s ease-in-out infinite alternate;
+  }
+}
+
+
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Mobile-specific responsive utilities */
+@media (max-width: 768px) {
+  .mobile-padding {
+    @apply px-4 py-6;
+  }
+  
+  .mobile-text-center {
+    @apply text-center;
+  }
+  
+  .mobile-full-width {
+    @apply w-full;
+  }
+  
+  .mobile-stack {
+    @apply flex-col;
+  }
+  
+  .mobile-gap-reduced {
+    @apply gap-4;
+  }
+  
+  .mobile-hidden {
+    @apply hidden;
+  }
+  
+  .mobile-visible {
+    @apply block;
+  }
+}
+
+/* Touch-friendly interactive elements */
+@media (max-width: 768px) {
+  .clickable {
+    min-height: 44px; /* iOS recommended touch target size */
+    min-width: 44px;
+  }
+  
+  .btn-neon {
+    min-height: 48px;
+    padding: 12px 24px;
+  }
+  
+  .category-btn {
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+}
+
+/* Reduced motion for mobile devices */
+@media (prefers-reduced-motion: reduce) {
+  .animate-glitch,
+  .animate-flicker,
+  .text-glitch,
+  .pulse-neon {
+    animation: none;
+  }
+  
+  .hover-scale-glow:hover {
+    transform: none;
+  }
+  
+  .skill-card-glow:hover {
+    transform: translateY(-2px);
+  }
+  
+  .project-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes pulse-neon {
+  0% {
+    box-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 15px currentColor;
+  }
+  100% {
+    box-shadow: 
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 30px currentColor,
+      0 0 40px currentColor;
+  }
 }

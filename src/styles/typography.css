@@ -1,0 +1,395 @@
+/* Typography System - Cyberpunk Portfolio */
+
+/* Base Typography Classes */
+.typography-base {
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.5;
+  letter-spacing: 0.025em;
+}
+
+.typography-display {
+  font-family: 'Orbitron', monospace;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+}
+
+/* Heading Hierarchy */
+.heading-hero {
+  @apply text-6xl md:text-8xl font-black tracking-tighter;
+  font-family: 'Orbitron', monospace;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.heading-h1 {
+  @apply text-5xl md:text-6xl font-black tracking-wider;
+  font-family: 'Orbitron', monospace;
+  line-height: 1.1;
+}
+
+.heading-h2 {
+  @apply text-3xl md:text-4xl font-bold tracking-wide;
+  font-family: 'Orbitron', monospace;
+  line-height: 1.2;
+}
+
+.heading-h3 {
+  @apply text-2xl md:text-3xl font-bold tracking-wide;
+  font-family: 'Orbitron', monospace;
+  line-height: 1.3;
+}
+
+.heading-h4 {
+  @apply text-xl md:text-2xl font-bold tracking-normal;
+  font-family: 'Orbitron', monospace;
+  line-height: 1.3;
+}
+
+.heading-h5 {
+  @apply text-lg md:text-xl font-bold tracking-normal;
+  font-family: 'Orbitron', monospace;
+  line-height: 1.4;
+}
+
+.heading-h6 {
+  @apply text-base md:text-lg font-bold tracking-normal;
+  font-family: 'Orbitron', monospace;
+  line-height: 1.4;
+}
+
+/* Body Text Hierarchy */
+.text-lead {
+  @apply text-xl md:text-2xl font-normal tracking-wide;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.6;
+}
+
+.text-body-lg {
+  @apply text-lg font-normal tracking-normal;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.6;
+}
+
+.text-body {
+  @apply text-base font-normal tracking-normal;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.6;
+}
+
+.text-body-sm {
+  @apply text-sm font-normal tracking-normal;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.5;
+}
+
+.text-caption {
+  @apply text-xs font-medium tracking-wide;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Button and UI Text */
+.text-button {
+  @apply text-base font-bold tracking-widest;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-button-sm {
+  @apply text-sm font-bold tracking-wider;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-nav {
+  @apply text-base font-bold tracking-wider;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.text-label {
+  @apply text-sm font-bold tracking-wide;
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* Color Classes */
+.text-primary-color {
+  @apply text-text-primary;
+}
+
+.text-secondary-color {
+  @apply text-text-secondary;
+}
+
+.text-accent-color {
+  @apply text-primary;
+}
+
+.text-muted {
+  @apply text-gray-400;
+}
+
+/* Clean Text Effects - No Glow */
+.text-hero {
+  color: #ffffff;
+}
+
+.text-primary-accent {
+  color: #00ffff;
+}
+
+.text-secondary-accent {
+  color: #ff00ff;
+}
+
+.text-accent-green {
+  color: #00ff00;
+}
+
+.text-clean {
+  /* Clean text without glow effects */
+}
+
+/* Glitch Text Effects */
+.text-glitch {
+  position: relative;
+  animation: glitch-text 2.5s infinite linear alternate-reverse;
+}
+
+.text-glitch::before,
+.text-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.text-glitch::before {
+  animation: glitch-text-1 0.5s infinite linear alternate-reverse;
+  color: #ff0000;
+  z-index: -1;
+}
+
+.text-glitch::after {
+  animation: glitch-text-2 0.5s infinite linear alternate-reverse;
+  color: #00ff00;
+  z-index: -2;
+}
+
+/* Pulse Text Effects */
+.text-pulse-neon {
+  animation: pulse-neon-text 2s ease-in-out infinite alternate;
+}
+
+.text-flicker {
+  animation: flicker-text 3s ease-in-out infinite;
+}
+
+/* Enhanced Responsive Typography Adjustments */
+@media (max-width: 1024px) {
+  .heading-hero {
+    @apply text-5xl;
+    line-height: 1;
+  }
+  
+  .heading-h1 {
+    @apply text-4xl;
+  }
+  
+  .heading-h2 {
+    @apply text-3xl;
+  }
+  
+  .heading-h3 {
+    @apply text-2xl;
+  }
+}
+
+@media (max-width: 768px) {
+  .heading-hero {
+    @apply text-4xl;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  
+  .heading-h1 {
+    @apply text-3xl;
+  }
+  
+  .heading-h2 {
+    @apply text-2xl;
+  }
+  
+  .heading-h3 {
+    @apply text-xl;
+  }
+  
+  .heading-h4 {
+    @apply text-lg;
+  }
+  
+  .text-lead {
+    @apply text-lg;
+    line-height: 1.6;
+  }
+  
+  .text-body-lg {
+    @apply text-base;
+  }
+}
+
+@media (max-width: 640px) {
+  .heading-hero {
+    @apply text-3xl;
+    line-height: 1.1;
+  }
+  
+  .heading-h1 {
+    @apply text-2xl;
+  }
+  
+  .heading-h2 {
+    @apply text-xl;
+  }
+  
+  .heading-h3 {
+    @apply text-lg;
+  }
+  
+  .text-lead {
+    @apply text-base;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 475px) {
+  .heading-hero {
+    @apply text-2xl;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  
+  .heading-h1 {
+    @apply text-xl;
+  }
+  
+  .heading-h2 {
+    @apply text-lg;
+  }
+  
+  .text-lead {
+    @apply text-sm;
+    line-height: 1.7;
+  }
+  
+  .text-button {
+    @apply text-sm;
+    letter-spacing: 0.1em;
+  }
+  
+  .text-button-sm {
+    @apply text-xs;
+    letter-spacing: 0.05em;
+  }
+}
+
+/* Contrast and Readability Enhancements */
+.text-high-contrast {
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.text-readable {
+  color: #e5e5e5;
+  line-height: 1.7;
+}
+
+.text-accessible {
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Animation Keyframes */
+@keyframes glitch-text {
+  0% { transform: translate(0); }
+  20% { transform: translate(-0.05em, 0.025em); }
+  40% { transform: translate(-0.025em, -0.05em); }
+  60% { transform: translate(0.05em, -0.01em); }
+  80% { transform: translate(0.01em, 0.025em); }
+  100% { transform: translate(0); }
+}
+
+@keyframes glitch-text-1 {
+  0% { clip-path: inset(40% 0 61% 0); }
+  20% { clip-path: inset(92% 0 1% 0); }
+  40% { clip-path: inset(43% 0 1% 0); }
+  60% { clip-path: inset(25% 0 58% 0); }
+  80% { clip-path: inset(54% 0 7% 0); }
+  100% { clip-path: inset(58% 0 43% 0); }
+}
+
+@keyframes glitch-text-2 {
+  0% { clip-path: inset(25% 0 58% 0); }
+  20% { clip-path: inset(54% 0 7% 0); }
+  40% { clip-path: inset(58% 0 43% 0); }
+  60% { clip-path: inset(40% 0 61% 0); }
+  80% { clip-path: inset(92% 0 1% 0); }
+  100% { clip-path: inset(43% 0 1% 0); }
+}
+
+@keyframes pulse-neon-text {
+  0% {
+    text-shadow:
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 15px currentColor;
+  }
+  100% {
+    text-shadow:
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 30px currentColor,
+      0 0 40px currentColor;
+  }
+}
+
+@keyframes flicker-text {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+  75% { opacity: 0.9; }
+}
+
+/* Utility Classes for Common Combinations */
+.heading-clean {
+  @apply heading-h1 text-primary-accent;
+}
+
+.heading-glitch {
+  @apply heading-hero text-glitch;
+}
+
+.text-cyberpunk {
+  @apply text-body text-primary-color;
+}
+
+.button-text {
+  @apply text-button text-high-contrast;
+}
+
+.nav-text {
+  @apply text-nav text-secondary-color;
+}
+
+.caption-text {
+  @apply text-caption text-muted;
+}

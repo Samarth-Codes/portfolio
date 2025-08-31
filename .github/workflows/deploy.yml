@@ -1,0 +1,96 @@
+name: Deploy Portfolio
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: portfolio-react/package-lock.json
+        
+    - name: Install dependencies
+      working-directory: ./portfolio-react
+      run: npm ci
+      
+    - name: Run type check
+      working-directory: ./portfolio-react
+      run: npm run type-check
+      
+    - name: Run tests
+      working-directory: ./portfolio-react
+      run: npm test -- --coverage --watchAll=false
+      
+    - name: Build project
+      working-directory: ./portfolio-react
+      run: npm run build
+      env:
+        REACT_APP_EMAILJS_SERVICE_ID: ${{ secrets.REACT_APP_EMAILJS_SERVICE_ID }}
+        REACT_APP_EMAILJS_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_TEMPLATE_ID }}
+        REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.REACT_APP_EMAILJS_PUBLIC_KEY }}
+        REACT_APP_ENVIRONMENT: production
+        GENERATE_SOURCEMAP: false
+
+  deploy-github-pages:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: portfolio-react/package-lock.json
+        
+    - name: Install dependencies
+      working-directory: ./portfolio-react
+      run: npm ci
+      
+    - name: Build project
+      working-directory: ./portfolio-react
+      run: npm run build
+      env:
+        REACT_APP_EMAILJS_SERVICE_ID: ${{ secrets.REACT_APP_EMAILJS_SERVICE_ID }}
+        REACT_APP_EMAILJS_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_TEMPLATE_ID }}
+        REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.REACT_APP_EMAILJS_PUBLIC_KEY }}
+        REACT_APP_ENVIRONMENT: production
+        GENERATE_SOURCEMAP: false
+        PUBLIC_URL: ${{ vars.PUBLIC_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./portfolio-react/build
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

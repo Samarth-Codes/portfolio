@@ -1,25 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { ToastProvider } from './contexts/ToastContext';
+import { assetManager } from './utils/assetManager';
+import { globalErrorHandler } from './utils/errorHandler';
+import { getEnvironmentConfig, isProduction } from './config/environment';
+import ErrorBoundary from './components/ErrorBoundary';
+import AppContent from './components/AppContent';
 
 function App() {
+  // Initialize application on start
+  useEffect(() => {
+    // Initialize global error handling
+    globalErrorHandler.initialize();
+
+    // Initialize asset management
+    assetManager.initialize().catch(error => {
+      globalErrorHandler.reportError(error, 'Asset Manager Initialization');
+    });
+
+    // Log environment info in development
+    if (!isProduction()) {
+      console.log('Environment Config:', getEnvironmentConfig());
+    }
+
+    // Cleanup on unmount
+    return () => {
+      globalErrorHandler.cleanup();
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ErrorBoundary>
+      <ToastProvider>
+        <BrowserRouter>
+          <ErrorBoundary>
+            <AppContent />
+          </ErrorBoundary>
+        </BrowserRouter>
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
 

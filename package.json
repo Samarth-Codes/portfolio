@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@tailwindcss/forms": "^0.5.10",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -11,17 +13,35 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.11",
     "@types/react-dom": "^19.1.7",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "dev": "react-scripts start",
+    "build": "react-scripts build && node scripts/build-optimize.js",
+    "build:basic": "react-scripts build",
+    "build:prod": "GENERATE_SOURCEMAP=false REACT_APP_ENVIRONMENT=production npm run build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:ci": "react-scripts test --coverage --watchAll=false",
+    "test:services": "react-scripts test --testPathPattern=services --coverage --watchAll=false",
+    "test:contact": "react-scripts test --testPathPattern=Contact --coverage --watchAll=false",
+    "test:toast": "react-scripts test --testPathPattern=Toast --coverage --watchAll=false",
+    "test:unit": "react-scripts test --testPathPattern=\"services|Toast\" --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "analyze": "ANALYZE_BUNDLE=true npm run build:basic && npx webpack-bundle-analyzer build/static/js/*.js",
+    "type-check": "tsc --noEmit",
+    "deploy:vercel": "node scripts/deploy-vercel.js",
+    "deploy:netlify": "node scripts/deploy-netlify.js",
+    "deploy:github": "node scripts/deploy-github-pages.js",
+    "deploy:vercel:prod": "node scripts/deploy-vercel.js --prod",
+    "deploy:netlify:prod": "node scripts/deploy-netlify.js --prod"
   },
   "eslintConfig": {
     "extends": [
@@ -40,5 +60,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-watch-typeahead": "^3.0.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.0",
+    "ts-jest": "^29.4.1",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }
