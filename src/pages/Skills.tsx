@@ -22,25 +22,39 @@ interface SkillCategory {
 
 const skills: Skill[] = [
     // Frontend
-    { id: 1, name: "Tailwind", level: 70, category: "Frontend", icon: "💨" },
+    { id: 1, name: "React", level: 90, category: "Frontend", icon: "⚛️" },
+    { id: 2, name: "JavaScript", level: 95, category: "Frontend", icon: "📘" },
+    { id: 3, name: "HTML", level: 95, category: "Frontend", icon: "🌐" },
+    { id: 4, name: "CSS", level: 90, category: "Frontend", icon: "🎨" },
+    { id: 5, name: "Bootstrap", level: 85, category: "Frontend", icon: "🎯" },
+    { id: 6, name: "Tailwind", level: 70, category: "Frontend", icon: "💨" },
 
     // Backend
-    { id: 2, name: "Express", level: 50, category: "Backend", icon: "🚀" },
-    { id: 3, name: "Python", level: 70, category: "Backend", icon: "🐍" },
-    { id: 4, name: "C", level: 50, category: "Backend", icon: "🔧" },
+    { id: 7, name: "Node.js", level: 85, category: "Backend", icon: "🟢" },
+    { id: 8, name: "Express", level: 50, category: "Backend", icon: "🚀" },
+    { id: 9, name: "Python", level: 70, category: "Backend", icon: "🐍" },
+    { id: 10, name: "Java", level: 85, category: "Backend", icon: "☕" },
+    { id: 11, name: "C", level: 50, category: "Backend", icon: "🔧" },
 
     // AI/ML
-    { id: 5, name: "PyTorch", level: 60, category: "AI/ML", icon: "🔥" },
-    { id: 6, name: "Scikit-learn", level: 70, category: "AI/ML", icon: "🧠" },
+    { id: 12, name: "PyTorch", level: 60, category: "AI/ML", icon: "🔥" },
+    { id: 13, name: "Scikit-learn", level: 70, category: "AI/ML", icon: "🧠" },
+    { id: 14, name: "OpenAI API", level: 85, category: "AI/ML", icon: "🤖" },
+    { id: 15, name: "Gemini API", level: 80, category: "AI/ML", icon: "💎" },
 
     // DevOps & Cloud
-    { id: 7, name: "Docker", level: 60, category: "DevOps", icon: "🐳" },
-    { id: 8, name: "Google Cloud", level: 50, category: "DevOps", icon: "☁️" },
+    { id: 16, name: "Docker", level: 60, category: "DevOps", icon: "🐳" },
+    { id: 17, name: "Git", level: 90, category: "DevOps", icon: "📝" },
+    { id: 18, name: "GitHub", level: 90, category: "DevOps", icon: "🐙" },
+    { id: 19, name: "Google Cloud", level: 50, category: "DevOps", icon: "☁️" },
+    { id: 20, name: "Vercel", level: 85, category: "DevOps", icon: "⚡" },
+    { id: 21, name: "Render", level: 80, category: "DevOps", icon: "🎨" },
+    { id: 22, name: "Firebase", level: 85, category: "DevOps", icon: "🔥" },
 
     // Blockchain
-    { id: 9, name: "Solidity", level: 60, category: "Blockchain", icon: "🔗" },
-    { id: 10, name: "Web3.js", level: 60, category: "Blockchain", icon: "🌐" },
-    { id: 11, name: "Ethereum", level: 60, category: "Blockchain", icon: "⚡" }
+    { id: 23, name: "Solidity", level: 60, category: "Blockchain", icon: "🔗" },
+    { id: 24, name: "Web3.js", level: 60, category: "Blockchain", icon: "🌐" },
+    { id: 25, name: "Ethereum", level: 60, category: "Blockchain", icon: "⚡" }
 ];
 
 const categories: SkillCategory[] = [
