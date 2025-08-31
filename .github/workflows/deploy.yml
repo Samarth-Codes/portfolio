@@ -19,22 +19,18 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: portfolio-react/package-lock.json
+        cache-dependency-path: package-lock.json
         
     - name: Install dependencies
-      working-directory: ./portfolio-react
       run: npm ci
       
     - name: Run type check
-      working-directory: ./portfolio-react
       run: npm run type-check
       
     - name: Run tests
-      working-directory: ./portfolio-react
       run: npm test -- --coverage --watchAll=false
       
     - name: Build project
-      working-directory: ./portfolio-react
       run: npm run build
       env:
         REACT_APP_EMAILJS_SERVICE_ID: ${{ secrets.REACT_APP_EMAILJS_SERVICE_ID }}
@@ -66,14 +62,12 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: portfolio-react/package-lock.json
+        cache-dependency-path: package-lock.json
         
     - name: Install dependencies
-      working-directory: ./portfolio-react
       run: npm ci
       
     - name: Build project
-      working-directory: ./portfolio-react
       run: npm run build
       env:
         REACT_APP_EMAILJS_SERVICE_ID: ${{ secrets.REACT_APP_EMAILJS_SERVICE_ID }}
@@ -89,7 +83,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ./portfolio-react/build
+        path: ./build
         
     - name: Deploy to GitHub Pages
       id: deployment
