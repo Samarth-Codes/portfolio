@@ -265,9 +265,8 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 📞 Contact
 
-- **Email**: hello@samarthcodes.com
-- **Portfolio**: [Your Portfolio URL]
-- **LinkedIn**: [Your LinkedIn]
+- **Email**: samarth260805@gmail.com
+
 
 ---
 
