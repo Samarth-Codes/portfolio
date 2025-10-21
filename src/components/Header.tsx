@@ -10,7 +10,7 @@ const Header: React.FC = () => {
 
   const handleResumeClick = () => {
     // Open Google Drive directly
-    window.open('https://drive.google.com/file/d/11N_LvzOOEVmAf-7VNfSNteRpL8hGvnGs/view?usp=sharing', '_blank');
+    window.open('https://drive.google.com/file/d/1GL1jqtVKS8rzlxX2TJfkqcBUpkNj7Kw6/view?usp=sharing', '_blank');
   };
 
   const isActive = (path: string) => location.pathname === path;
