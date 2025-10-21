@@ -110,7 +110,7 @@ const Contact: React.FC = () => {
   };
 
   const handleResumeClick = () => {
-    window.open('https://drive.google.com/file/d/11N_LvzOOEVmAf-7VNfSNteRpL8hGvnGs/view?usp=sharing', '_blank');
+    window.open('https://drive.google.com/file/d/1GL1jqtVKS8rzlxX2TJfkqcBUpkNj7Kw6/view?usp=sharing', '_blank');
   };
 
   const socialLinks = [
@@ -309,7 +309,7 @@ const Contact: React.FC = () => {
                 className="space-y-3 sm:space-y-4"
               >
                 <a 
-                  href="mailto:hello@samarthcodes.com"
+                  href="mailto:samarth260805@gmail.com"
                   className="flex items-center justify-center gap-3 w-full py-4 bg-transparent text-primary border-2 border-primary text-button hover:bg-primary hover:text-black clickable transition-all duration-300"
                 >
                   <Send className="w-5 h-5" />
