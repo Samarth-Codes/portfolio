@@ -21,6 +21,8 @@
 
 # Firebase
 **/firebase-service-account.json
+**/*firebase-adminsdk*.json
+*.json.firebase
 server/.env
 server/migrate.js
 server/add-achievements.js
