@@ -9,14 +9,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Force redirect from Render to custom domain
-app.use((req, res, next) => {
-    const host = req.headers.host;
-    if (host === "samarth-portfolio-1cc6.onrender.com") {
-        return res.redirect(301, `https://samarthcodes.dev${req.originalUrl}`);
-    }
-    next();
-});
 
 // Simple authentication middleware
 const AUTH_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
