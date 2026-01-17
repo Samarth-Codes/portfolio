@@ -10,6 +10,7 @@ import Home from '../pages/Home';
 import Projects from '../pages/Projects';
 import Skills from '../pages/Skills';
 import Contact from '../pages/Contact';
+import AdminDashboard from '../pages/AdminDashboard';
 
 
 
@@ -24,18 +25,19 @@ const AppContent: React.FC = () => {
         <div className="absolute top-0 left-0 h-1/2 w-full bg-gradient-to-b from-black/5 to-transparent"></div>
         <div className="absolute bottom-0 left-0 h-1/4 w-full bg-gradient-to-t from-black/10 to-transparent"></div>
       </div>
-      
+
       <Header />
-      
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/skills" element={<Skills />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
-      
+
       <Footer />
-      
+
       {/* Toast Container */}
       <ToastContainer />
     </div>

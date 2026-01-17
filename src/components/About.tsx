@@ -52,15 +52,15 @@ const About: React.FC = () => {
             </h2>
             <div className="space-y-4 sm:space-y-6 text-secondary-color mb-6 sm:mb-8">
               <p className="text-body-lg text-readable text-center lg:text-left">
-              I am a full-stack developer and AI enthusiast passionate about building impactful digital solutions at the intersection of web technologies, machine learning.
+                I am a full-stack developer and AI enthusiast passionate about building impactful digital solutions at the intersection of web technologies, machine learning, and innovation.
               </p>
               <p className="text-body-lg text-readable text-center lg:text-left">
-              My journey is defined by building projects that blend innovation with usability — from an AI-powered traffic system reducing congestion by 30% (🏆 Smart Delhi Ideathon 2025 Winner), to an AI legal assistant simplifying regulatory access (Top 10 at AceHack 3.0), and a Web3 tool enabling natural language crypto transactions (Top 15 at InnovateX DTU).
+                My journey is defined by building projects that blend innovation with usability — from an AI-powered traffic system reducing congestion by 30% (🏆 Smart Delhi Ideathon 2025 Winner), to an AI-powered highway maintenance monitoring solution (🥈 NHAI Hackathon 2025 - 2nd Place), an AI legal assistant simplifying regulatory access (Top 10 at AceHack 3.0), and a Web3 tool enabling natural language crypto transactions (Top 15 at InnovateX DTU).
               </p>
               <p className="text-body-lg text-readable text-center lg:text-left">
-              With expertise in React, Node.js, Java and AI APIs, I develop scalable, user-first applications. I also have a strong foundation in Data Structures & Algorithms using Java, which helps me write efficient, optimized solutions for real-world problems.
+                With expertise in React, Node.js, Java and AI APIs, I develop scalable, user-first applications. I also have a strong foundation in Data Structures & Algorithms using Java, which helps me write efficient, optimized solutions for real-world problems.
 
-Beyond coding, I was selected as a ClimAct Fellow (UNESCO & POP), where I collaborate with global peers on climate action, policy, and technology’s role in sustainability.
+                Beyond coding, I was selected as a ClimAct Fellow (UNESCO & POP) and as a delegate for the Harvard HPAIR Conference, where I engage with global leaders and peers on topics ranging from climate action and policy to technology's role in sustainability and international relations.
               </p>
             </div>
 

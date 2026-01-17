@@ -13,6 +13,7 @@ interface WinningPhoto {
 
 const AchievementsCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const winningPhotos: WinningPhoto[] = [
     {
@@ -23,7 +24,7 @@ const AchievementsCarousel: React.FC = () => {
     },
     {
       id: 2,
-      title: "", 
+      title: "",
       imageUrl: "/images/achievement2.jpg",
       year: ""
     },
@@ -77,24 +78,34 @@ const AchievementsCarousel: React.FC = () => {
   };
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => 
+    if (isTransitioning) return; // Prevent clicks during transition
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) =>
       prevIndex === winningPhotos.length - 1 ? 0 : prevIndex + 1
     );
-  }, [winningPhotos.length]);
+    // Reset transition lock after animation completes
+    setTimeout(() => setIsTransitioning(false), 800);
+  }, [winningPhotos.length, isTransitioning]);
 
   const prevSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => 
+    if (isTransitioning) return; // Prevent clicks during transition
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? winningPhotos.length - 1 : prevIndex - 1
     );
-  }, [winningPhotos.length]);
+    // Reset transition lock after animation completes
+    setTimeout(() => setIsTransitioning(false), 800);
+  }, [winningPhotos.length, isTransitioning]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      nextSlide();
-    }, 4000); // Increased to 4 seconds for better UX with manual controls
+      if (!isTransitioning) {
+        nextSlide();
+      }
+    }, 6000); // Increased to 6 seconds for better viewing time
 
     return () => clearInterval(interval);
-  }, [nextSlide]);
+  }, [nextSlide, isTransitioning]);
 
   return (
     <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-10 relative overflow-hidden">
@@ -113,33 +124,33 @@ const AchievementsCarousel: React.FC = () => {
 
             {/* Carousel Container */}
             <div className="relative flex-1 h-64 sm:h-80 md:h-96 lg:h-[500px] overflow-hidden rounded-lg border border-primary/30">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 }
-                }}
-                className="absolute w-full h-full"
-              >
-                <div className="relative w-full h-full overflow-hidden bg-black/50">
-                  {/* Background Image - Clean without overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <OptimizedImage
-                      src={winningPhotos[currentIndex].imageUrl}
-                      alt={`Achievement ${currentIndex + 1}`}
-                      className="max-w-full max-h-full object-contain"
-                      priority={currentIndex === 0} // Preload first image
-                      fallbackSrc={PLACEHOLDERS.ACHIEVEMENT}
-                    />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "tween", duration: 0.6, ease: "easeInOut" },
+                    opacity: { duration: 0.4 }
+                  }}
+                  className="absolute w-full h-full"
+                >
+                  <div className="relative w-full h-full overflow-hidden bg-black/50">
+                    {/* Background Image - Clean without overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <OptimizedImage
+                        src={winningPhotos[currentIndex].imageUrl}
+                        alt={`Achievement ${currentIndex + 1}`}
+                        className="max-w-full max-h-full object-contain"
+                        priority={currentIndex === 0} // Preload first image
+                        fallbackSrc={PLACEHOLDERS.ACHIEVEMENT}
+                      />
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* Next Button */}
@@ -158,11 +169,10 @@ const AchievementsCarousel: React.FC = () => {
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                  index === currentIndex 
-                    ? 'bg-primary shadow-sm shadow-primary' 
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${index === currentIndex
+                    ? 'bg-primary shadow-sm shadow-primary'
                     : 'bg-primary/30 hover:bg-primary/50'
-                }`}
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}

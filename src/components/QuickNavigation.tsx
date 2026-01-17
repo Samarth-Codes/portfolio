@@ -36,14 +36,14 @@ const QuickNavigation: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
-              className="card-hover-glow group clickable"
+              className="card-hover-glow group clickable h-full"
             >
-              <div className="relative rounded-lg overflow-hidden bg-transparent backdrop-blur-sm border border-primary p-6 sm:p-8 text-center group-hover:bg-primary/10 transition-all duration-500 min-h-[200px] sm:min-h-[220px] flex flex-col justify-center">
-                <item.icon className="w-12 h-12 sm:w-16 sm:h-16 text-primary group-hover:text-primary transition-all duration-300 mb-3 sm:mb-4 mx-auto group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_currentColor]" />
+              <div className="relative rounded-lg overflow-hidden bg-transparent backdrop-blur-sm border border-primary p-6 sm:p-8 text-center group-hover:bg-primary/10 transition-all duration-500 h-[280px] sm:h-[300px] flex flex-col justify-center items-center">
+                <item.icon className="w-12 h-12 sm:w-16 sm:h-16 text-primary group-hover:text-primary transition-all duration-300 mb-3 sm:mb-4 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_currentColor]" />
                 <h3 className="heading-h4 sm:heading-h3 text-primary-color group-hover:text-primary-color transition-colors duration-300 neon-text-subtle mb-2 sm:mb-3">
                   {item.title}
                 </h3>
-                <p className="text-body-sm sm:text-body text-secondary-color group-hover:text-secondary-color/90 transition-colors duration-300 text-readable">
+                <p className="text-body-sm sm:text-body text-secondary-color group-hover:text-secondary-color/90 transition-colors duration-300 text-readable max-w-sm">
                   {item.description}
                 </p>
               </div>

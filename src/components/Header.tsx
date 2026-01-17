@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [resumeUrl, setResumeUrl] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Fetch resume URL on component mount
+  useEffect(() => {
+    const fetchResumeUrl = async () => {
+      try {
+        const response = await fetch(`${API_URL}/resume`);
+        const data = await response.json();
+        setResumeUrl(data.url);
+      } catch (error) {
+        console.error('Error fetching resume URL:', error);
+        // Fallback URL
+        setResumeUrl('https://drive.google.com/file/d/1GL1jqtVKS8rzlxX2TJfkqcBUpkNj7Kw6/view?usp=sharing');
+      }
+    };
+    fetchResumeUrl();
+  }, []);
+
   const handleResumeClick = () => {
-    // Open Google Drive directly
-    window.open('https://drive.google.com/file/d/1GL1jqtVKS8rzlxX2TJfkqcBUpkNj7Kw6/view?usp=sharing', '_blank');
+    if (resumeUrl) {
+      window.open(resumeUrl, '_blank');
+    }
   };
 
   const isActive = (path: string) => location.pathname === path;
