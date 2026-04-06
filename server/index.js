@@ -1,9 +1,15 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const { db } = require('./firebase');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+    console.error('FATAL: JWT_SECRET environment variable is not set. Refusing to start.');
+    process.exit(1);
+}
 
 // Middleware
 app.use(cors());
@@ -11,13 +17,26 @@ app.use(express.json());
 
 
 // Simple authentication middleware
-const AUTH_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const AUTH_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!AUTH_PASSWORD) {
+    console.error('FATAL: ADMIN_PASSWORD environment variable is not set. Refusing to start.');
+    process.exit(1);
+}
 
-function authenticate(req, res, next) {
-    const password = req.headers['x-admin-password'];
-    if (password === AUTH_PASSWORD) {
+function verifyToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
+        if (!decoded || decoded.role !== 'admin') {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        req.user = decoded;
         next();
-    } else {
+    } catch (err) {
         res.status(401).json({ error: 'Unauthorized' });
     }
 }
@@ -40,7 +59,7 @@ app.get('/api/achievements', async (req, res) => {
 });
 
 // Add achievement (protected)
-app.post('/api/achievements', authenticate, async (req, res) => {
+app.post('/api/achievements', verifyToken, async (req, res) => {
     try {
         const docRef = await db.collection('achievements').add({
             ...req.body,
@@ -58,7 +77,7 @@ app.post('/api/achievements', authenticate, async (req, res) => {
 });
 
 // Update achievement (protected)
-app.put('/api/achievements/:id', authenticate, async (req, res) => {
+app.put('/api/achievements/:id', verifyToken, async (req, res) => {
     try {
         const docRef = db.collection('achievements').doc(req.params.id);
         const doc = await docRef.get();
@@ -81,7 +100,7 @@ app.put('/api/achievements/:id', authenticate, async (req, res) => {
 });
 
 // Delete achievement (protected)
-app.delete('/api/achievements/:id', authenticate, async (req, res) => {
+app.delete('/api/achievements/:id', verifyToken, async (req, res) => {
     try {
         await db.collection('achievements').doc(req.params.id).delete();
         res.json({ message: 'Achievement deleted' });
@@ -109,7 +128,7 @@ app.get('/api/projects', async (req, res) => {
 });
 
 // Add project (protected)
-app.post('/api/projects', authenticate, async (req, res) => {
+app.post('/api/projects', verifyToken, async (req, res) => {
     try {
         const docRef = await db.collection('projects').add({
             ...req.body,
@@ -127,7 +146,7 @@ app.post('/api/projects', authenticate, async (req, res) => {
 });
 
 // Update project (protected)
-app.put('/api/projects/:id', authenticate, async (req, res) => {
+app.put('/api/projects/:id', verifyToken, async (req, res) => {
     try {
         const docRef = db.collection('projects').doc(req.params.id);
         const doc = await docRef.get();
@@ -150,7 +169,7 @@ app.put('/api/projects/:id', authenticate, async (req, res) => {
 });
 
 // Delete project (protected)
-app.delete('/api/projects/:id', authenticate, async (req, res) => {
+app.delete('/api/projects/:id', verifyToken, async (req, res) => {
     try {
         await db.collection('projects').doc(req.params.id).delete();
         res.json({ message: 'Project deleted' });
@@ -186,7 +205,7 @@ app.get('/api/resume', async (req, res) => {
 });
 
 // Update resume URL (protected)
-app.put('/api/resume', authenticate, async (req, res) => {
+app.put('/api/resume', verifyToken, async (req, res) => {
     try {
         const { url } = req.body;
 
@@ -212,7 +231,8 @@ app.put('/api/resume', authenticate, async (req, res) => {
 app.post('/api/auth/login', (req, res) => {
     const { password } = req.body;
     if (password === AUTH_PASSWORD) {
-        res.json({ success: true, token: AUTH_PASSWORD });
+        const token = jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
+        res.json({ success: true, token });
     } else {
         res.status(401).json({ success: false, error: 'Invalid password' });
     }

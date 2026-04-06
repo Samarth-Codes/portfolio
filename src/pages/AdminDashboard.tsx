@@ -105,7 +105,7 @@ const AdminDashboard: React.FC = () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Admin-Password': authToken,
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({ url: newResumeUrl }),
             });
@@ -163,7 +163,7 @@ const AdminDashboard: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Admin-Password': authToken,
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify(newAchievement),
             });
@@ -198,7 +198,7 @@ const AdminDashboard: React.FC = () => {
         try {
             const response = await fetch(`${API_URL}/achievements/${id}`, {
                 method: 'DELETE',
-                headers: { 'X-Admin-Password': authToken },
+                headers: { 'Authorization': `Bearer ${authToken}` },
             });
 
             if (response.ok) {
@@ -224,7 +224,7 @@ const AdminDashboard: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Admin-Password': authToken,
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify(newProject),
             });
@@ -257,7 +257,7 @@ const AdminDashboard: React.FC = () => {
         try {
             const response = await fetch(`${API_URL}/projects/${id}`, {
                 method: 'DELETE',
-                headers: { 'X-Admin-Password': authToken },
+                headers: { 'Authorization': `Bearer ${authToken}` },
             });
 
             if (response.ok) {
