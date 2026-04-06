@@ -30,7 +30,11 @@ function verifyToken(req, res, next) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
     try {
-        jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
+        if (!decoded || decoded.role !== 'admin') {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        req.user = decoded;
         next();
     } catch (err) {
         res.status(401).json({ error: 'Unauthorized' });
