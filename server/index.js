@@ -17,7 +17,11 @@ app.use(express.json());
 
 
 // Simple authentication middleware
-const AUTH_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const AUTH_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!AUTH_PASSWORD) {
+    console.error('FATAL: ADMIN_PASSWORD environment variable is not set. Refusing to start.');
+    process.exit(1);
+}
 
 function verifyToken(req, res, next) {
     const authHeader = req.headers['authorization'];
