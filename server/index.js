@@ -48,8 +48,8 @@ app.get('/api/achievements', async (req, res) => {
     try {
         const snapshot = await db.collection('achievements').get();
         const achievements = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
+            ...doc.data(),
+            id: doc.id
         }));
         res.json(achievements);
     } catch (error) {
@@ -117,8 +117,8 @@ app.get('/api/projects', async (req, res) => {
     try {
         const snapshot = await db.collection('projects').get();
         const projects = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
+            ...doc.data(),
+            id: doc.id
         }));
         res.json(projects);
     } catch (error) {
