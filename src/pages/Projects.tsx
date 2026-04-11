@@ -32,6 +32,14 @@ const Projects: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedProjects, setExpandedProjects] = useState<Record<string, boolean>>({});
+
+  const toggleExpand = (id: string) => {
+    setExpandedProjects(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -39,7 +47,8 @@ const Projects: React.FC = () => {
     { id: 'all', name: 'ALL', color: '#00ffff' },
     { id: 'AI/ML', name: 'AI/ML', color: '#ff8800' },
     { id: 'Web', name: 'WEB', color: '#ff00ff' },
-    { id: 'Blockchain', name: 'BLOCKCHAIN', color: '#ffff00' }
+    { id: 'Blockchain', name: 'BLOCKCHAIN', color: '#ffff00' },
+    { id: 'Other', name: 'OTHER', color: '#ff0000' }
   ];
 
   useEffect(() => {
@@ -184,10 +193,10 @@ const Projects: React.FC = () => {
                       duration: 0.5,
                       ease: 'easeOut'
                     }}
-                    className="project-card group clickable"
+                    className="project-card group clickable h-full"
                   >
-                    <div className="relative rounded-lg overflow-hidden border border-border-color bg-black/50 backdrop-blur-sm">
-                      <div className="relative h-48 overflow-hidden">
+                    <div className="relative rounded-lg overflow-hidden border border-border-color bg-black/50 backdrop-blur-sm h-full flex flex-col">
+                      <div className="relative h-48 overflow-hidden flex-shrink-0">
                         <img
                           src={project.image}
                           alt={project.title}
@@ -195,29 +204,29 @@ const Projects: React.FC = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                         {project.featured && (
-                          <div className="absolute top-4 left-4 bg-primary text-black px-3 py-1 text-sm font-bold">
+                          <div className="absolute top-4 left-4 bg-primary text-black px-3 py-1 text-sm font-bold shadow-lg shadow-primary/20">
                             FEATURED
                           </div>
                         )}
                         {project.badge && (
-                          <div className={`absolute top-4 left-4 ${getBadgeColorClass(project.badgeColor)} text-white px-3 py-1 text-caption`}>
+                          <div className={`absolute top-4 left-4 ${getBadgeColorClass(project.badgeColor)} text-white px-3 py-1 text-caption font-bold shadow-lg`}>
                             {project.badge}
                           </div>
                         )}
                         {project.secondaryBadge && (
-                          <div className={`absolute top-4 right-4 ${getBadgeColorClass(project.secondaryBadgeColor)} text-white px-3 py-1 text-caption`}>
+                          <div className={`absolute top-4 right-4 ${getBadgeColorClass(project.secondaryBadgeColor)} text-white px-3 py-1 text-caption font-bold shadow-lg`}>
                             {project.secondaryBadge}
                           </div>
                         )}
                       </div>
 
-                      <div className="p-6">
+                      <div className="p-6 flex flex-col flex-grow">
                         <div className="flex items-center justify-between mb-3">
-                          <h3 className="heading-h3 text-primary-color">
+                          <h3 className="heading-h3 text-primary-color line-clamp-1">
                             {project.title}
                           </h3>
                           <span
-                            className="px-2 py-1 text-xs font-bold rounded border"
+                            className="px-2 py-1 text-[10px] font-bold rounded border flex-shrink-0 ml-2"
                             style={{
                               color: getCategoryColor(project.category),
                               borderColor: getCategoryColor(project.category),
@@ -227,28 +236,39 @@ const Projects: React.FC = () => {
                             {project.category}
                           </span>
                         </div>
-                        <p className="text-body text-secondary-color mb-4 text-readable">
+                        <p className={`text-body text-secondary-color text-readable transition-all duration-300 ${!expandedProjects[project.id] ? 'line-clamp-3 mb-2' : 'mb-4'}`}>
                           {project.description}
                         </p>
+                        {project.description.length > 100 && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleExpand(project.id);
+                            }}
+                            className="text-primary text-[10px] font-bold mb-4 hover:text-white transition-colors uppercase tracking-wider text-left w-max"
+                          >
+                            {expandedProjects[project.id] ? '[ Read Less ]' : '[ Read More ]'}
+                          </button>
+                        )}
 
                         <div className="flex flex-wrap gap-2 mb-6">
                           {project.technologies.map((tech) => (
                             <span
                               key={tech}
-                              className="px-3 py-1 bg-primary/20 text-primary text-caption border border-primary"
+                              className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] border border-primary/30 rounded"
                             >
                               {tech}
                             </span>
                           ))}
                         </div>
 
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 mt-auto">
                           {project.liveUrl && (
                             <a
                               href={project.liveUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="btn-neon flex items-center gap-2 px-4 py-2 bg-primary text-black text-button-sm hover:bg-opacity-90 hover-scale-glow clickable"
+                              className="btn-neon flex items-center justify-center gap-2 px-4 py-2 bg-primary text-black text-button-sm font-bold hover:bg-opacity-90 hover-scale-glow clickable w-full"
                               style={{ color: '#000' }}
                             >
                               <ExternalLink className="w-4 h-4" />
@@ -260,7 +280,7 @@ const Projects: React.FC = () => {
                               href={project.githubUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="btn-neon flex items-center gap-2 px-4 py-2 bg-transparent text-primary border-2 border-primary text-button-sm hover:bg-primary hover:text-black hover-neon-glow clickable"
+                              className="btn-neon flex items-center justify-center gap-2 px-4 py-2 bg-transparent text-primary border-2 border-primary text-button-sm font-bold hover:bg-primary hover:text-black hover-neon-glow clickable w-full"
                             >
                               <Github className="w-4 h-4" />
                               CODE
