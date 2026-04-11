@@ -102,11 +102,12 @@ app.put('/api/achievements/:id', verifyToken, async (req, res) => {
 // Delete achievement (protected)
 app.delete('/api/achievements/:id', verifyToken, async (req, res) => {
     try {
-        await db.collection('achievements').doc(req.params.id).delete();
+        const docRef = db.collection('achievements').doc(req.params.id);
+        await docRef.delete();
         res.json({ message: 'Achievement deleted' });
     } catch (error) {
         console.error('Error deleting achievement:', error);
-        res.status(500).json({ error: 'Error deleting achievement' });
+        res.status(500).json({ error: 'Error deleting achievement', details: error.message });
     }
 });
 
@@ -171,11 +172,12 @@ app.put('/api/projects/:id', verifyToken, async (req, res) => {
 // Delete project (protected)
 app.delete('/api/projects/:id', verifyToken, async (req, res) => {
     try {
-        await db.collection('projects').doc(req.params.id).delete();
+        const docRef = db.collection('projects').doc(req.params.id);
+        await docRef.delete();
         res.json({ message: 'Project deleted' });
     } catch (error) {
         console.error('Error deleting project:', error);
-        res.status(500).json({ error: 'Error deleting project' });
+        res.status(500).json({ error: 'Error deleting project', details: error.message });
     }
 });
 
