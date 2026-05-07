@@ -5,9 +5,39 @@
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      gtag('config', 'G-EQVDHT8S18');
+      var GA_MEASUREMENT_ID = 'G-EQVDHT8S18';
+
+      function trackPageView() {
+        gtag('event', 'page_view', {
+          page_path: window.location.pathname + window.location.search + window.location.hash,
+          page_location: window.location.href,
+          page_title: document.title
+        });
+      }
+
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID, { send_page_view: false });
+      trackPageView();
+
+      (function(history) {
+        var originalPushState = history.pushState;
+        var originalReplaceState = history.replaceState;
+
+        history.pushState = function() {
+          var result = originalPushState.apply(history, arguments);
+          trackPageView();
+          return result;
+        };
+
+        history.replaceState = function() {
+          var result = originalReplaceState.apply(history, arguments);
+          trackPageView();
+          return result;
+        };
+      })(window.history);
+
+      window.addEventListener('popstate', trackPageView);
     </script>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
