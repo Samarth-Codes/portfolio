@@ -70,3 +70,13 @@ Object.defineProperty(window, 'open', {
   writable: true,
   value: jest.fn(),
 });
+
+// Mock react-router-dom
+jest.mock('react-router-dom', () => ({
+  useNavigate: () => jest.fn(),
+  useLocation: () => ({ pathname: '/' }),
+  Link: ({ children, to, ...props }: any) => require('react').createElement('a', { href: to, ...props }, children),
+  Routes: ({ children }: any) => children,
+  Route: ({ element }: any) => element,
+  Navigate: () => null,
+}), { virtual: true });

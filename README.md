@@ -221,15 +221,17 @@ const skills: Skill[] = [
 - Update `src/index.css` for custom CSS classes
 - Adjust animations in component files
 
-## 📚 Documentation
+## 📚 Documentation & Setup Guides
 
-- **[Production Deployment Guide](./PRODUCTION_DEPLOYMENT_GUIDE.md)** - Comprehensive deployment instructions
-- **[Performance Report](./PERFORMANCE_REPORT.md)** - Performance optimization details
-- **[Code Quality Report](./CODE_QUALITY_REPORT.md)** - Code quality metrics and standards
-- **[EmailJS Setup Guide](./EMAILJS_SETUP.md)** - Contact form configuration
-- **[Testing Documentation](./TESTING.md)** - Testing strategy and coverage
-- **[Build Optimization Guide](./BUILD_OPTIMIZATION.md)** - Build process optimization
-- **[Image Optimization Guide](./IMAGE_OPTIMIZATION.md)** - Asset optimization strategies
+- **[Portfolio Overview & Architecture](./documentation/PORTFOLIO_OVERVIEW.md)** - Comprehensive end-to-end architecture & system guide
+- **[Admin Setup Guide](./documentation/setup/ADMIN_SETUP.md)** - Admin dashboard and authentication setup
+- **[Firebase Setup Guide](./documentation/setup/FIREBASE_SETUP.md)** - Firebase Firestore database setup
+- **[Firebase Quickstart](./documentation/setup/FIREBASE_QUICKSTART.md)** - Quickstart guide for Firebase
+- **[Firebase Fixes](./documentation/setup/FIREBASE_FIX.md)** - Troubleshooting & connection fixes
+- **[EmailJS Setup Guide](./documentation/setup/EMAILJS_SETUP.md)** - Contact form configuration
+- **[Render Deployment Guide](./documentation/setup/RENDER_DEPLOYMENT.md)** - Backend & frontend deployment instructions
+- **[404 Routing Fix Guide](./documentation/setup/FIX_404_ROUTING.md)** - SPA routing configuration
+- **[Laptop Routing Fix](./documentation/setup/FIX_LAPTOP_ROUTING.md)** - Device specific routing notes
 
 ## 🎯 Production Quality Metrics
 

@@ -5,6 +5,7 @@ import About from '../components/About';
 import Achievements from '../components/Achievements';
 import QuickNavigation from '../components/QuickNavigation';
 import AchievementsCarousel from '../components/AchievementsCarousel';
+import CurrentExperienceCard from '../components/CurrentExperienceCard';
 import ScrollReveal from '../components/ScrollReveal';
 
 const Home: React.FC = () => {
@@ -20,6 +21,10 @@ const Home: React.FC = () => {
 
       <ScrollReveal direction="up" delay={0.2}>
         <About />
+      </ScrollReveal>
+
+      <ScrollReveal direction="up" delay={0.1}>
+        <CurrentExperienceCard />
       </ScrollReveal>
 
       <ScrollReveal direction="up" delay={0.1}>

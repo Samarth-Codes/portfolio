@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -228,7 +229,110 @@ app.put('/api/resume', verifyToken, async (req, res) => {
     }
 });
 
-// ==================== AUTH ROUTE ====================
+// ==================== CURRENT EXPERIENCE ROUTES ====================
+
+// Get current experience (public)
+app.get('/api/current-experience', async (req, res) => {
+    try {
+        const docRef = db.collection('settings').doc('currentExperience');
+        const doc = await docRef.get();
+
+        if (!doc.exists) {
+            const defaultExperience = {
+                company: "Tech Innovation Lab",
+                role: "Software Engineer Intern",
+                location: "Remote / Hybrid",
+                startDate: "Jan 2025",
+                endDate: "",
+                currentlyWorking: true,
+                shortDescription: "Building scalable web applications, designing RESTful APIs, and developing AI-powered automation workflows.",
+                detailedDescription: "Working on modern full-stack development, architecting high-performance web applications with React and TypeScript, optimizing backend services, and building intelligent data processing pipelines.",
+                highlights: [
+                    "Software Development: Engineered modular, responsive user interfaces and micro-interactions using React, TypeScript, and modern CSS architectures.",
+                    "Backend & APIs: Developed secure Node.js/Express REST APIs with robust token-based authentication and database caching.",
+                    "Automation & Data Workflows: Built automated data pipelines and integrated AI models for intelligent workflow processing.",
+                    "Engineering Impact & Collaboration: Collaborated in agile sprints, participating in code reviews, CI/CD pipeline optimization, and system architecture discussions."
+                ],
+                technologies: [
+                    "React",
+                    "TypeScript",
+                    "Node.js",
+                    "Express",
+                    "Firebase",
+                    "Tailwind CSS",
+                    "Python"
+                ],
+                slug: "current-experience",
+                updatedAt: new Date().toISOString()
+            };
+            await docRef.set(defaultExperience);
+            return res.json(defaultExperience);
+        }
+
+        res.json(doc.data());
+    } catch (error) {
+        console.error('Error fetching current experience:', error);
+        res.status(500).json({ error: 'Error fetching current experience' });
+    }
+});
+
+// Update current experience (protected)
+app.put('/api/current-experience', verifyToken, async (req, res) => {
+    try {
+        const {
+            company,
+            role,
+            location,
+            startDate,
+            endDate,
+            currentlyWorking,
+            shortDescription,
+            detailedDescription,
+            highlights,
+            technologies
+        } = req.body;
+
+        if (!company || !role) {
+            return res.status(400).json({ error: 'Company and Role are required' });
+        }
+
+        const isCurrentlyWorking = Boolean(currentlyWorking);
+
+        // Sanitize highlights array
+        const sanitizedHighlights = Array.isArray(highlights)
+            ? highlights.map(h => String(h).trim()).filter(Boolean)
+            : (typeof highlights === 'string' ? highlights.split('\n').map(h => h.trim()).filter(Boolean) : []);
+
+        // Sanitize technologies array
+        const sanitizedTechnologies = Array.isArray(technologies)
+            ? technologies.map(t => String(t).trim()).filter(Boolean)
+            : (typeof technologies === 'string' ? technologies.split(',').map(t => t.trim()).filter(Boolean) : []);
+
+        const experienceData = {
+            company: String(company).trim(),
+            role: String(role).trim(),
+            location: location ? String(location).trim() : '',
+            startDate: startDate ? String(startDate).trim() : '',
+            endDate: isCurrentlyWorking ? '' : (endDate ? String(endDate).trim() : ''),
+            currentlyWorking: isCurrentlyWorking,
+            shortDescription: shortDescription ? String(shortDescription).trim() : '',
+            detailedDescription: detailedDescription ? String(detailedDescription).trim() : '',
+            highlights: sanitizedHighlights,
+            technologies: sanitizedTechnologies,
+            slug: 'current-experience',
+            updatedAt: new Date().toISOString()
+        };
+
+        const docRef = db.collection('settings').doc('currentExperience');
+        await docRef.set(experienceData, { merge: true });
+
+        const updatedDoc = await docRef.get();
+        res.json(updatedDoc.data());
+    } catch (error) {
+        console.error('Error updating current experience:', error);
+        res.status(500).json({ error: 'Error updating current experience' });
+    }
+});
 
 app.post('/api/auth/login', (req, res) => {
     const { password } = req.body;

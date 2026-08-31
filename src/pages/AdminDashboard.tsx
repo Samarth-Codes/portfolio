@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Save, Lock, RefreshCw, Pencil, X, Image } from 'lucide-react';
+import { Plus, Trash2, Save, Lock, RefreshCw, Pencil, X, Image, Briefcase, CheckCircle2 } from 'lucide-react';
+import { ExperienceData, FALLBACK_EXPERIENCE } from '../types/experience';
 
 interface Achievement {
     id: string;
@@ -221,7 +222,7 @@ const AdminDashboard: React.FC = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
     const [authToken, setAuthToken] = useState('');
-    const [activeTab, setActiveTab] = useState<'achievements' | 'projects' | 'resume'>('achievements');
+    const [activeTab, setActiveTab] = useState<'achievements' | 'projects' | 'experience' | 'resume'>('achievements');
     const [loading, setLoading] = useState(false);
 
     // Achievements state
@@ -248,6 +249,13 @@ const AdminDashboard: React.FC = () => {
     const [resumeUrl, setResumeUrl] = useState('');
     const [newResumeUrl, setNewResumeUrl] = useState('');
 
+    // Current Experience state
+    const [experience, setExperience] = useState<ExperienceData>(FALLBACK_EXPERIENCE);
+    const [experienceTechRaw, setExperienceTechRaw] = useState('');
+    const [newHighlightText, setNewHighlightText] = useState('');
+    const [editingHighlightIndex, setEditingHighlightIndex] = useState<number | null>(null);
+    const [editingHighlightText, setEditingHighlightText] = useState('');
+
     useEffect(() => {
         const savedToken = sessionStorage.getItem('adminToken');
         if (savedToken) {
@@ -261,10 +269,11 @@ const AdminDashboard: React.FC = () => {
     const loadData = async () => {
         setLoading(true);
         try {
-            const [achievementsRes, projectsRes, resumeRes] = await Promise.all([
+            const [achievementsRes, projectsRes, resumeRes, experienceRes] = await Promise.all([
                 fetch(`${API_URL}/achievements`),
                 fetch(`${API_URL}/projects`),
                 fetch(`${API_URL}/resume`),
+                fetch(`${API_URL}/current-experience`),
             ]);
             setAchievements(await achievementsRes.json());
             const projectsData = await projectsRes.json();
@@ -272,6 +281,12 @@ const AdminDashboard: React.FC = () => {
             const resumeData = await resumeRes.json();
             setResumeUrl(resumeData.url);
             setNewResumeUrl(resumeData.url);
+            
+            if (experienceRes.ok) {
+                const expData = await experienceRes.json();
+                setExperience(expData);
+                setExperienceTechRaw(expData.technologies ? expData.technologies.join(', ') : '');
+            }
         } catch (error) {
             alert('Error loading data. Make sure the backend server is running.');
         }
@@ -429,6 +444,82 @@ const AdminDashboard: React.FC = () => {
         } catch { alert('Error connecting to server'); }
     };
 
+    // ==================== CURRENT EXPERIENCE ====================
+
+    const addHighlight = () => {
+        if (!newHighlightText.trim()) return;
+        setExperience({
+            ...experience,
+            highlights: [...experience.highlights, newHighlightText.trim()]
+        });
+        setNewHighlightText('');
+    };
+
+    const removeHighlight = (indexToRemove: number) => {
+        setExperience({
+            ...experience,
+            highlights: experience.highlights.filter((_, idx) => idx !== indexToRemove)
+        });
+    };
+
+    const startEditHighlight = (index: number) => {
+        setEditingHighlightIndex(index);
+        setEditingHighlightText(experience.highlights[index] || '');
+    };
+
+    const saveEditHighlight = (index: number) => {
+        if (!editingHighlightText.trim()) return;
+        const updatedHighlights = [...experience.highlights];
+        updatedHighlights[index] = editingHighlightText.trim();
+        setExperience({
+            ...experience,
+            highlights: updatedHighlights
+        });
+        setEditingHighlightIndex(null);
+        setEditingHighlightText('');
+    };
+
+    const updateCurrentExperience = async () => {
+        if (!experience.company.trim() || !experience.role.trim()) {
+            alert('Company and Role are required fields');
+            return;
+        }
+
+        try {
+            const techList = experienceTechRaw
+                ? experienceTechRaw.split(',').map(t => t.trim()).filter(Boolean)
+                : experience.technologies;
+
+            const payload: ExperienceData = {
+                ...experience,
+                technologies: techList,
+                currentlyWorking: Boolean(experience.currentlyWorking),
+                endDate: experience.currentlyWorking ? '' : (experience.endDate || '')
+            };
+
+            const response = await fetch(`${API_URL}/current-experience`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setExperience(data);
+                setExperienceTechRaw(data.technologies ? data.technologies.join(', ') : '');
+                alert('Current Experience updated successfully!');
+            } else {
+                const errData = await response.json().catch(() => ({}));
+                alert(errData.error || 'Error updating current experience');
+            }
+        } catch {
+            alert('Error connecting to server');
+        }
+    };
+
     // ==================== LOGIN SCREEN ====================
 
 
@@ -477,15 +568,16 @@ const AdminDashboard: React.FC = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-4 mb-8">
-                    {(['achievements', 'projects', 'resume'] as const).map(tab => (
+                <div className="flex flex-wrap gap-4 mb-8">
+                    {(['achievements', 'projects', 'experience', 'resume'] as const).map(tab => (
                         <button key={tab} onClick={() => setActiveTab(tab)}
                             className={`px-6 py-3 rounded-lg font-semibold transition-colors capitalize ${activeTab === tab
                                 ? 'bg-cyan-500 text-black'
                                 : 'bg-black/50 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10'}`}>
                             {tab === 'achievements' ? `Achievements (${achievements.length})`
                                 : tab === 'projects' ? `Projects (${projects.length})`
-                                    : 'Resume URL'}
+                                    : tab === 'experience' ? 'Current Experience'
+                                        : 'Resume URL'}
                         </button>
                     ))}
                 </div>
@@ -659,6 +751,251 @@ const AdminDashboard: React.FC = () => {
                                     )}
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== CURRENT EXPERIENCE TAB ===== */}
+                {activeTab === 'experience' && (
+                    <div className="bg-black/60 border border-cyan-500/30 rounded-xl p-6 mb-8 space-y-6">
+                        <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-cyan-500/20">
+                            <div>
+                                <h2 className="text-xl font-bold text-cyan-400 flex items-center gap-2">
+                                    <Briefcase className="w-5 h-5" /> Manage Current Experience
+                                </h2>
+                                <p className="text-gray-400 text-xs sm:text-sm mt-1">
+                                    Edit your current active internship or experience details shown on the Home page and dedicated /experience page.
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono border ${
+                                    experience.currentlyWorking
+                                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                        : 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400'
+                                }`}>
+                                    <span className={`w-2 h-2 rounded-full ${experience.currentlyWorking ? 'bg-emerald-400 animate-pulse' : 'bg-yellow-400'}`}></span>
+                                    {experience.currentlyWorking ? 'Active / Present' : 'Past Experience'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Basic Info: Company, Role, Location */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className={labelCls}>Company / Organization *</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Google, Tech Innovation Lab"
+                                    value={experience.company}
+                                    onChange={e => setExperience({ ...experience, company: e.target.value })}
+                                    className={inputCls}
+                                />
+                            </div>
+                            <div>
+                                <label className={labelCls}>Role / Title *</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Software Engineer Intern"
+                                    value={experience.role}
+                                    onChange={e => setExperience({ ...experience, role: e.target.value })}
+                                    className={inputCls}
+                                />
+                            </div>
+                            <div>
+                                <label className={labelCls}>Location</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Bangalore, India (or Remote)"
+                                    value={experience.location}
+                                    onChange={e => setExperience({ ...experience, location: e.target.value })}
+                                    className={inputCls}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Timeline & Currently Working Toggle */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                            <div>
+                                <label className={labelCls}>Start Date (e.g., Jan 2025)</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Jan 2025"
+                                    value={experience.startDate}
+                                    onChange={e => setExperience({ ...experience, startDate: e.target.value })}
+                                    className={inputCls}
+                                />
+                            </div>
+                            <div>
+                                <label className={labelCls}>End Date</label>
+                                <input
+                                    type="text"
+                                    placeholder={experience.currentlyWorking ? 'Present' : 'e.g. Jun 2025'}
+                                    value={experience.currentlyWorking ? '' : (experience.endDate || '')}
+                                    disabled={experience.currentlyWorking}
+                                    onChange={e => setExperience({ ...experience, endDate: e.target.value })}
+                                    className={`${inputCls} ${experience.currentlyWorking ? 'opacity-50 cursor-not-allowed bg-black/30' : ''}`}
+                                />
+                            </div>
+                            <div className="flex items-center h-10">
+                                <label className="inline-flex items-center gap-3 cursor-pointer select-none">
+                                    <input
+                                        type="checkbox"
+                                        checked={Boolean(experience.currentlyWorking)}
+                                        onChange={e => setExperience({ ...experience, currentlyWorking: e.target.checked })}
+                                        className="w-5 h-5 rounded border-cyan-500/40 bg-black/50 text-cyan-500 focus:ring-cyan-500"
+                                    />
+                                    <span className="text-sm font-semibold text-cyan-300">Currently Working Here (Display "Present")</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* Short Description (Home Page Card) */}
+                        <div>
+                            <label className={labelCls}>
+                                Short Summary / Description * <span className="text-gray-500 font-mono text-[10px]">(Displayed on Home Page Card)</span>
+                            </label>
+                            <textarea
+                                rows={2}
+                                placeholder="Brief overview of role and impact..."
+                                value={experience.shortDescription}
+                                onChange={e => setExperience({ ...experience, shortDescription: e.target.value })}
+                                className={inputCls}
+                            />
+                        </div>
+
+                        {/* Detailed Description (/experience Page) */}
+                        <div>
+                            <label className={labelCls}>
+                                Detailed Overview * <span className="text-gray-500 font-mono text-[10px]">(Displayed on dedicated /experience page)</span>
+                            </label>
+                            <textarea
+                                rows={4}
+                                placeholder="Comprehensive breakdown of responsibilities and scope..."
+                                value={experience.detailedDescription}
+                                onChange={e => setExperience({ ...experience, detailedDescription: e.target.value })}
+                                className={inputCls}
+                            />
+                        </div>
+
+                        {/* Highlights Management */}
+                        <div className="border-t border-cyan-500/20 pt-4">
+                            <label className="block text-sm font-bold text-cyan-300 mb-2">
+                                Key Engineering Highlights & Milestones
+                            </label>
+                            <p className="text-xs text-gray-400 mb-3">
+                                Tip: Format with a domain prefix like <code className="text-cyan-400">Software Development: Built...</code> or <code className="text-cyan-400">Backend & APIs: Optimized...</code> for beautiful icon categorization.
+                            </p>
+
+                            {/* Add highlight input */}
+                            <div className="flex gap-2 mb-4">
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Backend & APIs: Developed secure Node.js/Express REST APIs with JWT authentication."
+                                    value={newHighlightText}
+                                    onChange={e => setNewHighlightText(e.target.value)}
+                                    onKeyPress={e => e.key === 'Enter' && addHighlight()}
+                                    className={inputCls}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={addHighlight}
+                                    className="bg-cyan-500 text-black px-4 py-2 rounded-lg font-bold hover:bg-cyan-400 transition-colors flex items-center gap-1.5 flex-shrink-0"
+                                >
+                                    <Plus className="w-4 h-4" /> Add
+                                </button>
+                            </div>
+
+                            {/* List of current highlights */}
+                            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                                {experience.highlights && experience.highlights.length > 0 ? (
+                                    experience.highlights.map((hl, idx) => (
+                                        <div key={idx} className="flex items-center justify-between gap-3 p-3 bg-black/40 border border-cyan-500/20 rounded-lg text-sm">
+                                            {editingHighlightIndex === idx ? (
+                                                <div className="flex-grow flex gap-2">
+                                                    <input
+                                                        type="text"
+                                                        value={editingHighlightText}
+                                                        onChange={e => setEditingHighlightText(e.target.value)}
+                                                        className={inputCls}
+                                                        autoFocus
+                                                    />
+                                                    <button
+                                                        onClick={() => saveEditHighlight(idx)}
+                                                        className="px-3 py-1 bg-emerald-500 text-black rounded font-bold text-xs"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setEditingHighlightIndex(null)}
+                                                        className="px-3 py-1 bg-gray-700 text-white rounded text-xs"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <span className="text-gray-200 flex-grow leading-relaxed">{hl}</span>
+                                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                                        <button
+                                                            onClick={() => startEditHighlight(idx)}
+                                                            className="text-cyan-400 hover:text-cyan-300 p-1"
+                                                            title="Edit"
+                                                        >
+                                                            <Pencil className="w-4 h-4" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => removeHighlight(idx)}
+                                                            className="text-red-400 hover:text-red-300 p-1"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-xs text-gray-500 italic">No highlights added yet.</p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Technologies Management */}
+                        <div className="border-t border-cyan-500/20 pt-4">
+                            <label className={labelCls}>Technologies & Tools (Comma-separated)</label>
+                            <input
+                                type="text"
+                                placeholder="React, TypeScript, Node.js, Express, Firebase, Python"
+                                value={experienceTechRaw}
+                                onChange={e => setExperienceTechRaw(e.target.value)}
+                                className={inputCls}
+                            />
+                            {/* Live Tech Pill Preview */}
+                            <div className="flex flex-wrap gap-2 mt-3">
+                                {(experienceTechRaw
+                                    ? experienceTechRaw.split(',').map(t => t.trim()).filter(Boolean)
+                                    : experience.technologies
+                                ).map((tech, i) => (
+                                    <span key={i} className="inline-flex items-center gap-1 text-xs font-mono px-2.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300">
+                                        <CheckCircle2 className="w-3 h-3 text-cyan-400" />
+                                        {tech}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Save Button */}
+                        <div className="pt-4 border-t border-cyan-500/20 flex items-center justify-between">
+                            <span className="text-xs text-gray-400">
+                                Last updated: {experience.updatedAt ? new Date(experience.updatedAt).toLocaleString() : 'Never'}
+                            </span>
+                            <button
+                                onClick={updateCurrentExperience}
+                                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg"
+                            >
+                                <Save className="w-4 h-4" /> Save Current Experience
+                            </button>
                         </div>
                     </div>
                 )}

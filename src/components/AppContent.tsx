@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import { ToastContainer } from './Toast';
@@ -11,8 +11,7 @@ import Projects from '../pages/Projects';
 import Skills from '../pages/Skills';
 import Contact from '../pages/Contact';
 import AdminDashboard from '../pages/AdminDashboard';
-
-
+import Experience from '../pages/Experience';
 
 const AppContent: React.FC = () => {
   // Initialize page-specific asset preloading
@@ -30,10 +29,13 @@ const AppContent: React.FC = () => {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/experience" element={<Experience />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/skills" element={<Skills />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        {/* Catch-all route - redirect to home for any undefined paths */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       <Footer />

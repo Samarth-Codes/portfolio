@@ -1,0 +1,51 @@
+services:
+  # Frontend - React SPA
+  - type: web
+    name: portfolio-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-XSS-Protection
+        value: 1; mode=block
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+    routes:
+      # Redirect all routes to index.html for React Router
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: REACT_APP_ENVIRONMENT
+        value: production
+      - key: GENERATE_SOURCEMAP
+        value: false
+      - key: REACT_APP_API_URL
+        sync: false  # You'll set this manually to your backend URL
+
+  # Backend - Node.js Express API
+  - type: web
+    name: portfolio-backend
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: PORT
+        value: 5000
+      - key: ADMIN_PASSWORD
+        sync: false  # Set this in Render dashboard
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false  # Set this in Render dashboard (use the value from server/.env)
